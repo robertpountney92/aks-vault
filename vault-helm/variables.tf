@@ -1,10 +1,6 @@
 # ---------------------------
 # Azure Key Vault
 # ---------------------------
-# variable "tenant_id" {
-#   default = "58dea911-047d-43fb-9342-19ca17665d67"
-# }
-
 variable "key_name" {
   description = "Azure Key Vault key name"
   default     = "generated-key"
@@ -34,5 +30,5 @@ variable "label" {
 # Service Principal
 # ---------------------------
 variable "app_password" {
-  default = "password"
+  description = "Azure Kubernetes Service Cluster service principal password"
 }

@@ -1,16 +1,11 @@
 resource "random_pet" "prefix" {}
 
-provider "azurerm" {
-  version = "=2.5.0"
-  features {}
-}
-
 resource "azurerm_resource_group" "default" {
   name     = "${random_pet.prefix.id}-rg"
   location = var.location
 
   tags = {
-    environment = "Demo"
+    environment = var.environment
   }
 }
 
@@ -28,8 +23,8 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   service_principal {
-    client_id     = var.appId
-    client_secret = var.password
+    client_id     = azuread_service_principal.vault.application_id
+    client_secret = var.app_password
   }
 
   role_based_access_control {
@@ -43,6 +38,6 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   tags = {
-    environment = "Demo"
+    environment = var.environment
   }
 }

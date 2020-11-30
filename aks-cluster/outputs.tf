@@ -33,3 +33,19 @@ output "cluster_username" {
 output "cluster_password" {
   value = azurerm_kubernetes_cluster.default.kube_config.0.password
 }
+
+output "sp_client_id" {
+  value = azuread_service_principal.vault.application_id
+}
+
+output "sp_object_id" {
+  value = azuread_service_principal.vault.object_id
+}
+
+output "tenant_id" {
+  value = data.azurerm_client_config.current.tenant_id
+}
+
+output "az_user_client_id" {
+  value = data.azurerm_client_config.current.client_id
+}

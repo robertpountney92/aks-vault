@@ -29,7 +29,8 @@ resource "azurerm_key_vault" "vault" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
 
-    object_id = azuread_service_principal.vault.object_id
+    # object_id = azuread_service_principal.vault.object_id
+    object_id = data.terraform_remote_state.aks-cluster.outputs.sp_object_id
 
     key_permissions = [
       "get",
@@ -42,7 +43,7 @@ resource "azurerm_key_vault" "vault" {
     ]
   }
 
-  # Access policy for the created service principle
+  # Access policy for the created service principal
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
 

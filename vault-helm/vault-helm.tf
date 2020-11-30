@@ -3,34 +3,29 @@ resource "kubernetes_namespace" "vault" {
     name = var.namespace
     labels = {
       mylabel = var.label
-    } 
+    }
   }
 }
 
-
 resource "helm_release" "vault" {
-  depends_on = [ kubernetes_namespace.vault ]
-  
-  name  = "vault"
-  chart = "hashicorp/vault"
+  depends_on = [kubernetes_namespace.vault]
+
+  name      = "vault"
+  chart     = "hashicorp/vault"
   namespace = var.namespace
   values = [
     file("values-raft.yaml")
   ]
   set {
-    name  = "server.extraEnvironmentVars.ARM_CLIENT_ID"
-    value = azuread_service_principal.vault.application_id
+    name  = "server.extraEnvironmentVars.AZURE_CLIENT_ID"
+    value = data.terraform_remote_state.aks-cluster.outputs.sp_client_id
   }
   set {
-    name  = "server.extraEnvironmentVars.ARM_CLIENT_SECRET"
+    name  = "server.extraEnvironmentVars.AZURE_CLIENT_SECRET"
     value = var.app_password
   }
-  # set {
-  #   name  = "server.extraEnvironmentVars.ARM_SUBSCRIPTION_ID"
-  #   value = data.azurerm_client_config.current.subscription_id
-  # }
   set {
-    name  = "server.extraEnvironmentVars.ARM_TENANT_ID"
+    name  = "server.extraEnvironmentVars.AZURE_TENANT_ID"
     value = data.azurerm_client_config.current.tenant_id
   }
   set {

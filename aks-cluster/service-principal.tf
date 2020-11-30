@@ -1,26 +1,4 @@
 
-resource "azuread_service_principal" "vault" {
-  application_id               = azuread_application.vault.application_id
-  app_role_assignment_required = false
-
-  tags = [var.label]
-}
-
-
-resource "azurerm_role_assignment" "vault" {
-  scope                            = data.azurerm_subscription.primary.id
-  role_definition_name             = "Key Vault Contributor"
-  principal_id                     = azuread_service_principal.vault.id
-  skip_service_principal_aad_check = true
-}
-
-
-
-
-
-
-
-
 resource "azuread_application" "vault" {
   name                       = "vault"
   homepage                   = "https://homepage"
@@ -30,34 +8,6 @@ resource "azuread_application" "vault" {
   oauth2_allow_implicit_flow = true
   type                       = "webapp/api"
   owners                     = [data.azurerm_client_config.current.object_id]
-
-  #   required_resource_access {
-  #     resource_app_id = "00000003-0000-0000-c000-000000000000"
-
-  #     resource_access {
-  #       id   = "..."
-  #       type = "Role"
-  #     }
-
-  #     resource_access {
-  #       id   = "..."
-  #       type = "Scope"
-  #     }
-
-  #     resource_access {
-  #       id   = "..."
-  #       type = "Scope"
-  #     }
-  #   }
-
-  #   required_resource_access {
-  #     resource_app_id = "00000002-0000-0000-c000-000000000000"
-
-  #     resource_access {
-  #       id   = "..."
-  #       type = "Scope"
-  #     }
-  #   }
 
   app_role {
     allowed_member_types = [
@@ -88,23 +38,20 @@ resource "azuread_application" "vault" {
     type                       = "Admin"
     value                      = "administer"
   }
+}
 
-  #   optional_claims {
-  #     access_token {
-  #       name = "myclaim"
-  #     }
+resource "azuread_service_principal" "vault" {
+  application_id               = azuread_application.vault.application_id
+  app_role_assignment_required = false
 
-  #     access_token {
-  #       name = "otherclaim"
-  #     }
+  tags = [var.label]
+}
 
-  #     id_token {
-  #       name                  = "userclaim"
-  #       source                = "user"
-  #       essential             = true
-  #       additional_properties = ["emit_as_roles"]
-  #     }
-  #   }
+resource "azurerm_role_assignment" "vault" {
+  scope                            = data.azurerm_subscription.primary.id
+  role_definition_name             = "Key Vault Contributor"
+  principal_id                     = azuread_service_principal.vault.id
+  skip_service_principal_aad_check = true
 }
 
 resource "azuread_application_password" "vault" {
