@@ -1,0 +1,51 @@
+global:
+  tlsDisable: true
+
+injector:
+  image:
+    repository: "hashicorp/vault-k8s"
+    tag: "0.4.0"
+    pullPolicy: IfNotPresent
+
+  agentImage:
+    repository: "vault"
+    tag: "1.5.0"  
+
+server:
+  # extraVolumes:
+  #   - type: 'secret'
+  #     name: 'kms-creds'
+
+  image:
+    repository: "vault"
+    tag: "1.5.0"
+    pullPolicy: IfNotPresent  
+  
+  affinity: "" #important: set affinity empty if you're using a single-node cluster, like Minikube
+  ha:
+    enabled: true
+    replicas: 1
+    
+    raft:  
+      enabled: true  
+      config: |
+        ui = true
+  
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        
+        seal "azurekeyvault" {
+          # All arguments for this stanza are provided via Environment variables, see vault-helm.tf
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+        }
+ui:
+  enabled: true
+  serviceType: "LoadBalancer"
+  serviceNodePort: null
+  externalPort: 8200    
