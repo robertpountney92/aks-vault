@@ -44,6 +44,8 @@ server:
         storage "raft" {
           path = "/vault/data"
         }
+
+        service_registration "kubernetes" {}
 ui:
   enabled: true
   serviceType: "LoadBalancer"
