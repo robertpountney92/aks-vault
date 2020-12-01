@@ -12,7 +12,7 @@ resource "kubernetes_secret" "azure_client_secret" {
 
   metadata {
     name      = "azure-client-secret"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.vault.metadata[0].name
   }
 
   data = {
