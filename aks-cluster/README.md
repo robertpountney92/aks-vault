@@ -1,63 +1,10 @@
-# Learn Terraform - Provision AKS Cluster
+# Provision AKS Cluster
+Create AKS cluster using Terraform
 
-This repo is a companion repo to the [Provision an AKS Cluster learn guide](https://learn.hashicorp.com/terraform/kubernetes/provision-aks-cluster), containing
-Terraform configuration files to provision an AKS cluster on
-Azure.
+    terraform init
+    terraform apply -auto-approve
 
-After installing the Azure CLI and logging in. Create an Active Directory service
-principal account.
-
-```shell
-$ az ad sp create-for-rbac --skip-assignment
-{
-  "appId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
-  "displayName": "azure-cli-2019-04-11-00-46-05",
-  "name": "http://azure-cli-2019-04-11-00-46-05",
-  "password": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
-  "tenant": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
-}
-```
-
-Then, replace `terraform.tfvars` values with your `appId` and `password`. 
-Terraform will use these values to provision resources on Azure.
-
-After you've done this, initalize your Terraform workspace, which will download 
-the provider and initialize it with the values provided in the `terraform.tfvars` file.
-
-```shell
-$ terraform init
-
-Initializing provider plugins...
-- Checking for available provider plugins on https://releases.hashicorp.com...
-- Downloading plugin for provider "azurerm" (1.27.0)...
-
-Terraform has been successfully initialized!
-```
-
-
-Then, provision your AKS cluster by running `terraform apply`. This will 
-take approximately 10 minutes.
-
-```shell
-$ terraform apply
-
-# Output truncated...
-
-Plan: 3 to add, 0 to change, 0 to destroy.
-
-Do you want to perform these actions?
-  Terraform will perform the actions described above.
-  Only 'yes' will be accepted to approve.
-
-# Output truncated...
-
-Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
-
-Outputs:
-
-kubernetes_cluster_name = light-eagle-aks
-resource_group_name = light-eagle-rg
-```
+When promted enter a password of your choice.
 
 ## Configure kubectl
 
@@ -65,17 +12,6 @@ To configure kubetcl run the following command:
 
 ```shell
 $ az aks get-credentials --resource-group $(terraform output resource_group_name) --name $(terraform output kubernetes_cluster_name)
-```
-
-The
-[resource group name](https://github.com/hashicorp/learn-terraform-provision-aks-cluster/blob/master/aks-cluster.tf#L16)
-and [AKS name](https://github.com/hashicorp/learn-terraform-provision-aks-cluster/blob/master/aks-cluster.tf#L25)
- correspond to the output variables showed after the successful Terraform run.
-
-You can view these outputs again by running:
-
-```shell
-$ terraform output
 ```
 
 ## Configure Kubernetes Dashboard

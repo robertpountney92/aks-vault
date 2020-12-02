@@ -12,7 +12,7 @@ resource "kubernetes_secret" "azure_client_secret" {
 
   metadata {
     name      = "azure-client-secret"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.vault.metadata[0].name
   }
 
   data = {
@@ -33,7 +33,7 @@ resource "helm_release" "vault" {
     name  = "server.extraEnvironmentVars.AZURE_CLIENT_ID"
     value = data.terraform_remote_state.aks-cluster.outputs.sp_client_id
   }
-  
+
   # Use this method to set environment variable to secret you inupt to TF config
   # set {
   #   name  = "server.extraEnvironmentVars.AZURE_CLIENT_SECRET"
