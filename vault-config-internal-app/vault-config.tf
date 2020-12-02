@@ -20,9 +20,16 @@ resource "vault_auth_backend" "kubernetes" {
   type = "kubernetes"
 }
 
+
+module "vault-token" {
+  source  = "matti/resource/shell"
+  command = "kubectl get secrets -n vault | grep vault-token | awk 'NR==1 {print $1}'"
+}
+
+
 data "kubernetes_secret" "vault_token" {
   metadata {
-    name      = "vault-token-xfmdx"
+    name      = module.vault-token.stdout
     namespace = "vault"
   }
 }

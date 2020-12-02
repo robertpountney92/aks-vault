@@ -24,7 +24,7 @@ server:
   affinity: "" #important: set affinity empty if you're using a single-node cluster, like Minikube
   ha:
     enabled: true
-    replicas: 1
+    replicas: 2
     
     raft:  
       enabled: true  

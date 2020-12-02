@@ -33,7 +33,7 @@ resource "helm_release" "vault" {
     name  = "server.extraEnvironmentVars.AZURE_CLIENT_ID"
     value = data.terraform_remote_state.aks-cluster.outputs.sp_client_id
   }
-  
+
   # Use this method to set environment variable to secret you inupt to TF config
   # set {
   #   name  = "server.extraEnvironmentVars.AZURE_CLIENT_SECRET"
