@@ -1,5 +1,11 @@
 # Provision AKS Cluster
-Create AKS cluster using Terraform
+
+## Login to Azure
+
+  az login
+
+
+## Create AKS cluster using Terraform
 
     terraform init
     terraform apply -auto-approve

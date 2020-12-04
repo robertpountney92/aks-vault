@@ -9,7 +9,7 @@ resource "vault_pki_secret_backend_intermediate_cert_request" "intermediate" {
   backend = vault_mount.pki_int.path
 
   type        = "internal"
-  common_name = "Intermediate Authority"
+  common_name = "example.com Intermediate Authority"
 }
 
 
@@ -17,12 +17,8 @@ resource "vault_pki_secret_backend_root_sign_intermediate" "signed" {
   backend = vault_mount.pki_root.path
 
   csr                  = vault_pki_secret_backend_intermediate_cert_request.intermediate.csr
-  common_name          = "Intermediate CA"
-  exclude_cn_from_sans = true
-  ou                   = "My OU"
-  organization         = "My organization"
+  common_name          = "example.com"
   ttl                  = 2592000
-
 }
 
 resource "vault_pki_secret_backend_intermediate_set_signed" "intermediate" {
